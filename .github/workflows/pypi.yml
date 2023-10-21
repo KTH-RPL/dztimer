@@ -1,79 +1,66 @@
-name: Publish to PyPI.org
+name: Build, Test & Publish
+
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
   push:
-    branches: ["master"]
-  pull_request:
-    branches: ["master"]
+    branches:
+      - master
 
 jobs:
-  build_sdist:
-    name: Build source distribution
-    runs-on: ubuntu-latest
+
+  # Job 1: Build & Test with Pip
+  build_and_test:
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [windows-latest, macos-latest, ubuntu-latest, ubuntu-18.04, ubuntu-20.04]
+        python-version: ["3.6", "3.8", "3.9", "3.10", "3.11" , "3.x"]
+
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-      - name: Build sdist
-        run: pipx run build --sdist ${{github.workspace}}/
-      - name: Move sdist to dist
-        run: mkdir -p dist && mv ${{github.workspace}}/dist/*.tar.gz dist/
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
 
-      - uses: actions/upload-artifact@v3
-        with:
-          path: dist/*.tar.gz
+    - name: Install dependencies and package
+      run: |
+        python -m pip install pytest
+        pip install --verbose .
 
-  cibuildwheel:
-    name: Build wheels on ${{ matrix.os }}
+    - name: Run tests
+      run: python -m pytest
+
+  # Job 2: Build SDist & Wheels and Publish to TestPyPI
+  publish:
+    needs: build_and_test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-11]
+        os: [windows-latest, macos-latest, ubuntu-latest, ubuntu-18.04, ubuntu-20.04]
 
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-      - name: Build test wheels (only PRs)
-        # if: github.event_name != 'release'
-        uses: pypa/cibuildwheel@v2.12.0
-        env: # build 1 build per platform just to make sure we can do it later when releasing
-          CIBW_BUILD: "cp312-*"
-        with:
-          package-dir: ${{github.workspace}}/
+    - name: Set up Python
+      uses: actions/setup-python@v4
 
-      - name: Build all wheels
-        if: github.event_name == 'release'
-        uses: pypa/cibuildwheel@v2.12.0
-        with:
-          package-dir: ${{github.workspace}}/
+    - name: Build SDist & Wheels
+      run: |
+        pip install build
+        python -m build
 
-      - uses: actions/upload-artifact@v3
-        with:
-          path: ./wheelhouse/*.whl
+    - name: Check metadata
+      run: |
+        pip install twine
+        twine check dist/*
 
-  pypi-publish:
-    # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-    # if: github.event_name == 'release'
-    # needs: [cibuildwheel, build_sdist]
-    # runs-on: ubuntu-latest
-    # steps:
-    #   - uses: actions/download-artifact@v3
-    #     with:
-    #       name: artifact
-    #       path: dist
-
-    #   - uses: pypa/gh-action-pypi-publish@release/v1
-    #     with:
-    #       password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-    name: Upload release to PyPI
-    runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://test.pypi.org/p/dztimer
-    permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
-    steps:
-      - name: Publish package distributions to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy
+    # - name: Publish to TestPyPI
+    #   if: github.ref == 'refs/heads/master' # Only if on master branch
+    #   run: |
+    #     pip install twine
+    #     twine upload --repository testpypi dist/* --skip-existing
+    #   env:
+    #     TWINE_USERNAME: __token__
+    #     TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
