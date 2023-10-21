@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest, macos-latest, ubuntu-latest, ubuntu-18.04, ubuntu-20.04]
-        python-version: ["3.6", "3.8", "3.9", "3.10", "3.11" , "3.x"]
+        platform: [windows-latest, macos-latest, ubuntu-18.04]
+        python-version: ["3.x"]
 
     steps:
     - uses: actions/checkout@v4
@@ -32,29 +32,29 @@ jobs:
     - name: Run tests
       run: python -m pytest
 
-  # Job 2: Build SDist & Wheels and Publish to TestPyPI
-  publish:
-    needs: build_and_test
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest, ubuntu-18.04, ubuntu-20.04]
+  # # Job 2: Build SDist & Wheels and Publish to TestPyPI
+  # publish:
+  #   needs: build_and_test
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-22.04, windows-2022, macos-11]
 
-    steps:
-    - uses: actions/checkout@v4
+  #   steps:
+  #   - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
+  #   - name: Set up Python
+  #     uses: actions/setup-python@v4
 
-    - name: Build SDist & Wheels
-      run: |
-        pip install build
-        python -m build
+  #   - name: Build SDist & Wheels
+  #     run: |
+  #       pip install build
+  #       python -m build
 
-    - name: Check metadata
-      run: |
-        pip install twine
-        twine check dist/*
+  #   - name: Check metadata
+  #     run: |
+  #       pip install twine
+  #       twine check dist/*
 
     # - name: Publish to TestPyPI
     #   if: github.ref == 'refs/heads/master' # Only if on master branch
