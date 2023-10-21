@@ -1,6 +1,11 @@
 /*!
  * UFOMap: An Efficient Probabilistic 3D Mapping Framework That Embraces the Unknown
  *
+ * @author Qingwen Zhang (qingwen@kth.se)
+ * @version 2.0
+ * @date 2023-10-21
+ * @log support multiple platforms, compile with c++17 in windows, linux and macos
+ * 
  * @author Daniel Duberg (dduberg@kth.se)
  * @see https://github.com/UnknownFreeOccupied/ufomap
  * @version 1.0

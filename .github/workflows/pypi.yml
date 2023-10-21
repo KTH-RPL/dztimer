@@ -9,13 +9,13 @@ on:
 jobs:
 
   # Job 1: Build & Test with Pip
-  build_and_test:
+  testing:
     runs-on: ${{ matrix.platform }}
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest, macos-latest] # , ubuntu-latest
-        python-version: ["3.x"]
+        platform: [windows-latest, macos-latest, ubuntu-latest]
+        python-version: ["3.8", "3.11"]
 
     steps:
     - uses: actions/checkout@v4
@@ -32,35 +32,69 @@ jobs:
     - name: Run tests
       run: python -m pytest
 
-  # # Job 2: Build SDist & Wheels and Publish to TestPyPI
-  # publish:
-  #   needs: build_and_test
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os: [ubuntu-22.04, windows-2022, macos-11]
+  build_sdist:
+    name: Build SDist
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
 
-  #   steps:
-  #   - uses: actions/checkout@v4
+    - name: Build SDist
+      run: pipx run build --sdist
 
-  #   - name: Set up Python
-  #     uses: actions/setup-python@v4
+    - name: Check metadata
+      run: pipx run twine check dist/*
 
-  #   - name: Build SDist & Wheels
-  #     run: |
-  #       pip install build
-  #       python -m build
+    - uses: actions/upload-artifact@v3
+      with:
+        path: dist/*.tar.gz
 
-  #   - name: Check metadata
-  #     run: |
-  #       pip install twine
-  #       twine check dist/*
+  build_wheels:
+    name: Wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
-    # - name: Publish to TestPyPI
-    #   if: github.ref == 'refs/heads/master' # Only if on master branch
-    #   run: |
-    #     pip install twine
-    #     twine upload --repository testpypi dist/* --skip-existing
-    #   env:
-    #     TWINE_USERNAME: __token__
-    #     TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - uses: pypa/cibuildwheel@v2.13.0
+      env:
+        # Cross-compile on macOS
+        CIBW_ARCHS_MACOS: x86_64 arm64
+
+        # Temporary: use pre-release Python 3.12 for stable ABI builds
+        CIBW_PRERELEASE_PYTHONS: True
+
+    - name: Verify clean directory
+      run: git diff --exit-code
+      shell: bash
+
+    - name: Upload wheels
+      uses: actions/upload-artifact@v3
+      with:
+        path: wheelhouse/*.whl
+
+  upload_all:
+    name: Upload if release
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-latest
+    # if: github.event_name == 'release' && github.event.action == 'published'
+
+    steps:
+    - uses: actions/setup-python@v4
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: artifact
+        path: dist
+
+    - uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        repository-url: https://test.pypi.org/legacy/

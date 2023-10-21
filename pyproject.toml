@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "dztimer"
-version = "0.0.4"
+version = "0.0.5"
 description = "A beautiful timer from ufomap by Daniel Duberg, nanobind by Qingwen Zhang"
 readme = "README.md"
 requires-python = ">=3.8"
