@@ -18,4 +18,6 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE NB_DIR)
 list(APPEND CMAKE_PREFIX_PATH "${NB_DIR}")
 find_package(nanobind CONFIG REQUIRED)
-nanobind_add_module(dztimer src/dztimer.cpp)
+nanobind_add_module(dztimer_ext STABLE_ABI NB_STATIC src/dztimer_ext.cpp)
+
+install(TARGETS dztimer_ext LIBRARY DESTINATION dztimer)

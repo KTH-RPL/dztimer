@@ -42,7 +42,7 @@
 #include "nanobind/nanobind.h"
 #include <nanobind/stl/string.h>
 
-NB_MODULE(dztimer, m) {
+NB_MODULE(dztimer_ext, m) {
     nanobind::class_<Timer>(m, "Timer")
         .def("start", static_cast<void (Timer::*)()>(&Timer::start))
         .def("stop", &Timer::stop);
