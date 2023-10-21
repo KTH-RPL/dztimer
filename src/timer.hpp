@@ -349,13 +349,13 @@ class Timing : public Timer
 	    std::size_t group_colors_level = std::numeric_limits<std::size_t>::max(),
 	    int         precision          = 4) const
 	{
-		static constexpr std::array const RC{redColor(),  greenColor(),   yellowColor(),
+		static constexpr std::array<const char*, 7> const RC{redColor(),  greenColor(),   yellowColor(),
 		                                     blueColor(), magentaColor(), cyanColor(),
 		                                     whiteColor()};
 
 		std::array<std::string, 8> label{"Component", "Total", "Last", "Mean",
 		                                 "StDev",     "Min",   "Max",  "Steps"};
-		std::array                 width{
+		std::array<int, 8>          width{
         std::max(static_cast<int>(label[0].length()), longestTag()),
         std::max(static_cast<int>(label[1].length()), precision + 1 + longestTotal()),
         std::max(static_cast<int>(label[2].length()), precision + 1 + longestLast()),
@@ -394,7 +394,7 @@ class Timing : public Timer
 	                        bool random_colors, bool bold, std::size_t group_colors_level,
 	                        int precision) const
 	{
-		static constexpr std::array const RC{redColor(),  greenColor(),   yellowColor(),
+		static constexpr std::array<const char*, 7> const RC{redColor(),  greenColor(),   yellowColor(),
 		                                     blueColor(), magentaColor(), cyanColor(),
 		                                     whiteColor()};
 
