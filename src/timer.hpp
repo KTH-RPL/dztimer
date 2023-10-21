@@ -53,6 +53,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <array>
 
 class Timer
 {
@@ -349,7 +350,7 @@ class Timing : public Timer
 	    std::size_t group_colors_level = std::numeric_limits<std::size_t>::max(),
 	    int         precision          = 4) const
 	{
-		static constexpr std::array<const char*, 7> RC{redColor(),  greenColor(),   yellowColor(),
+		static constexpr std::array<const char*, 7> const RC{redColor(),  greenColor(),   yellowColor(),
 		                                     blueColor(), magentaColor(), cyanColor(),
 		                                     whiteColor()};
 
@@ -394,7 +395,7 @@ class Timing : public Timer
 	                        bool random_colors, bool bold, std::size_t group_colors_level,
 	                        int precision) const
 	{
-		static constexpr std::array<const char*, 7> RC{redColor(),  greenColor(),   yellowColor(),
+		static constexpr std::array<const char*, 7> const RC{redColor(),  greenColor(),   yellowColor(),
 		                                     blueColor(), magentaColor(), cyanColor(),
 		                                     whiteColor()};
 
