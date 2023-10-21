@@ -425,7 +425,7 @@ class Timing : public Timer
 
 	int longestTotal() const
 	{
-		int l = (std::isnan(totalSeconds())) ? nan_gap_ : std::to_string(static_cast<int>(totalSeconds())).length();
+		int l = (std::isnan(totalSeconds()) ? nan_gap_ : std::to_string(static_cast<int>(totalSeconds())).length());
 		// int l = std::to_string(static_cast<int>(totalSeconds())).length();
 		for (auto const& [_, t] : timer_) {
 			l = std::max(l, t.longestTotal());
@@ -435,7 +435,7 @@ class Timing : public Timer
 
 	int longestLast() const
 	{
-		int l = (std::isnan(lastSeconds())) ? nan_gap_ : std::to_string(static_cast<int>(lastSeconds())).length();
+		int l = (std::isnan(lastSeconds()) ? nan_gap_ : std::to_string(static_cast<int>(lastSeconds())).length());
 		// int l = std::to_string(static_cast<int>(lastSeconds())).length();
 		for (auto const& [_, t] : timer_) {
 			l = std::max(l, t.longestLast());
@@ -445,7 +445,7 @@ class Timing : public Timer
 
 	int longestMean() const
 	{
-		int l = (std::isnan(meanSeconds())) ? nan_gap_ : std::to_string(static_cast<int>(meanSeconds())).length();
+		int l = (std::isnan(meanSeconds()) ? nan_gap_ : std::to_string(static_cast<int>(meanSeconds())).length());
 		// int l = std::to_string(static_cast<int>(meanSeconds())).length();
 		for (auto const& [_, t] : timer_) {
 			l = std::max(l, t.longestMean());
@@ -455,7 +455,7 @@ class Timing : public Timer
 
 	int longestStd() const
 	{
-		int l = (std::isnan(stdSeconds())) ? nan_gap_ : std::to_string(static_cast<int>(stdSeconds())).length();
+		int l = (std::isnan(stdSeconds()) ? nan_gap_ : std::to_string(static_cast<int>(stdSeconds())).length());
 		// int l = std::to_string(static_cast<int>(stdSeconds())).length();
 		for (auto const& [_, t] : timer_) {
 			l = std::max(l, t.longestStd());
@@ -465,7 +465,7 @@ class Timing : public Timer
 
 	int longestMin() const
 	{
-		int l = (std::isnan(minSeconds())) ? nan_gap_ : std::to_string(static_cast<int>(minSeconds())).length();
+		int l = (std::isnan(minSeconds()) ? nan_gap_ : std::to_string(static_cast<int>(minSeconds())).length());
 		// int l = std::to_string(static_cast<int>(minSeconds())).length();
 		for (auto const& [_, t] : timer_) {
 			l = std::max(l, t.longestMin());
@@ -475,7 +475,7 @@ class Timing : public Timer
 
 	int longestMax() const
 	{
-		int l = (std::isnan(maxSeconds())) ? nan_gap_ : std::to_string(static_cast<int>(maxSeconds())).length();
+		int l = (std::isnan(maxSeconds()) ? nan_gap_ : std::to_string(static_cast<int>(maxSeconds())).length());
 		// int l = std::to_string(static_cast<int>(maxSeconds())).length();
 		for (auto const& [_, t] : timer_) {
 			l = std::max(l, t.longestMax());
@@ -485,7 +485,7 @@ class Timing : public Timer
 
 	int longestSteps() const
 	{
-		int l = (std::isnan(numSamples())) ? nan_gap_ : std::to_string(static_cast<int>(numSamples())).length();
+		int l = (std::isnan(numSamples()) ? nan_gap_ : std::to_string(static_cast<int>(numSamples())).length());
 		// int l = std::to_string(numSamples()).length();
 		for (auto const& [_, t] : timer_) {
 			l = std::max(l, t.longestSteps());
