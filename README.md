@@ -1,18 +1,17 @@
 dztimer
 ---
 <!-- <a href="https://github.com/KTH-RPL/dztimer"><img src="https://img.shields.io/github/v/release/KTH-RPL/dztimer?label=version" /> <a href="https://github.com/KTH-RPL/dztimer/blob/master/LICENSE"><img src="https://img.shields.io/github/license/KTH-RPL/dztimer" />  -->
-<img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" />
-<img src="https://img.shields.io/badge/Windows-0078D6?st&logo=windows&logoColor=white" />
-<img src="https://img.shields.io/badge/mac%20os-000000?&logo=apple&logoColor=white" />
+<img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" /> <img src="https://img.shields.io/badge/Windows-0078D6?st&logo=windows&logoColor=white" /> <img src="https://img.shields.io/badge/mac%20os-000000?&logo=apple&logoColor=white" />
 <!-- <img src="https://img.shields.io/pypi/pyversions/dztimer.svg" /></a> -->
 
 A beautiful timer from ufomap by [Daniel Duberg](https://www.kth.se/profile/dduberg), nanobind by [Qingwen Zhang](https://kin-zhang.github.io/).
 
-Running on macOS, Windows and Linux.
+Running on macOS, Windows and Linux, with Python Version >= 3.8.
 
 TestDemo:
 ```bash
 pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ dztimer
+python3 -c 'import dztimer'
 ```
 
 Quick Demo:
@@ -38,6 +37,14 @@ timer.print(random_colors=True, bold=True)
 
 <!-- Tutorial on nanobind and pypi release in [Chinese blog](TODO) -->
 
+### Build from source
+
+```bash
+git clone https://github.com/KTH-RPL/dztimer
+cd dztimer
+pip install .
+python3 -c 'import dztimer'
+```
 
 
 ### Issue I met when write this package

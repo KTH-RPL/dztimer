@@ -13,6 +13,7 @@ def test_dztimer():
         timer[1].start("Second Scan Cost")
         sleep(0.08 + i * 0.01)
         timer[1].stop()
+    print(f"The timing last record: {timer[1].lastSeconds():.2f} s")
     timer.print(random_colors=True, bold=True)
 
 if __name__ == "__main__":

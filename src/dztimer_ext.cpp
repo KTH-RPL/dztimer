@@ -45,7 +45,8 @@
 NB_MODULE(dztimer_ext, m) {
     nanobind::class_<Timer>(m, "Timer")
         .def("start", static_cast<void (Timer::*)()>(&Timer::start))
-        .def("stop", &Timer::stop);
+        .def("stop", &Timer::stop)
+        .def("lastSeconds", &Timer::lastSeconds);
 
     nanobind::class_<Timing, Timer>(m, "Timing")
         .def(nanobind::init<>())
