@@ -1,16 +1,16 @@
 dztimer
 ---
 <!-- <a href="https://github.com/KTH-RPL/dztimer"><img src="https://img.shields.io/github/v/release/KTH-RPL/dztimer?label=version" /> <a href="https://github.com/KTH-RPL/dztimer/blob/master/LICENSE"><img src="https://img.shields.io/github/license/KTH-RPL/dztimer" />  -->
-<img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" /> <img src="https://img.shields.io/badge/Windows-0078D6?st&logo=windows&logoColor=white" /> <img src="https://img.shields.io/badge/mac%20os-000000?&logo=apple&logoColor=white" />
+<a href="https://github.com/KTH-RPL/dztimer"><img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" /> <a href="https://github.com/KTH-RPL/dztimer"><img src="https://img.shields.io/badge/Windows-0078D6?st&logo=windows&logoColor=white" /> <a href="https://github.com/KTH-RPL/dztimer"><img src="https://img.shields.io/badge/mac%20os-000000?&logo=apple&logoColor=white" />
 <!-- <img src="https://img.shields.io/pypi/pyversions/dztimer.svg" /></a> -->
 
 A beautiful timer from ufomap by [Daniel Duberg](https://www.kth.se/profile/dduberg), nanobind by [Qingwen Zhang](https://kin-zhang.github.io/).
 
 Running on macOS, Windows and Linux, with Python Version >= 3.8.
 
-TestDemo:
+Install:
 ```bash
-pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ dztimer
+pip install dztimer
 python3 -c 'import dztimer'
 ```
 
@@ -29,6 +29,7 @@ timer[0].stop()
 for i in range(5):
     timer[1].start("Second Scan Cost")
     sleep(0.08 + i * 0.01)
+    print("latest one cost:",timer[1].lastSeconds())
     timer[1].stop()
 timer.print(random_colors=True, bold=True)
 ```
