@@ -1,10 +1,11 @@
 /*!
- * UFOMap: An Efficient Probabilistic 3D Mapping Framework That Embraces the Unknown
  *
  * @author Qingwen Zhang (qingwen@kth.se)
  * @version 2.0
  * @date 2023-10-21
- * @log support multiple platforms, compile with c++17 in windows, linux and macos
+ * @log 
+ * 2024-07-03: fix nan print misalignment. And set longest for all tag width
+ * 2023-10-21: support multiple platforms, compile with c++17 in windows, linux and macos
  * 
  * @author Daniel Duberg (dduberg@kth.se)
  * @see https://github.com/UnknownFreeOccupied/ufomap
@@ -373,6 +374,7 @@ class Timing : public Timer
 
 		std::array<int, width.size()> left_pad;
 		std::array<int, width.size()> right_pad;
+
 		for (std::size_t i{}; label.size() != i; ++i) {
 			left_pad[i]  = std::floor((width[i] - static_cast<int>(label[i].length())) / 2.0);
 			right_pad[i] = std::ceil((width[i] - static_cast<int>(label[i].length())) / 2.0);
@@ -385,20 +387,27 @@ class Timing : public Timer
 		}
 		printf("\n");
 
-		printf("%s%s%-*s\t%.*f\t%.*f\t%.*f\t%.*f\t%.*f\t%.*f\t%lu%s\n", bold ? "\033[1m" : "",
-		       random_colors ? RC[0] : color().c_str(), width[0], tag().c_str(), precision,
-		       totalSeconds(), precision, lastSeconds(), precision, meanSeconds(), precision,
-		       stdSeconds(), precision, minSeconds(), precision, maxSeconds(), numSamples(),
-		       resetColor());
+		double values[] = {totalSeconds(), lastSeconds(), meanSeconds(), stdSeconds(),
+		                    minSeconds(),   maxSeconds()};
+
+		printf("%s%s%-*s", bold ? "\033[1m" : "", random_colors ? RC[0] : color().c_str(), width[0], tag().c_str());
+		for (std::size_t i=0; i<std::size(values); ++i){
+			if (std::isnan(totalSeconds())) {
+				printf("\t%*s%s%*s", left_pad[i+1], "", "nan", right_pad[i+1], "");
+			} else {
+				printf("\t%-*.*f", width[i+1], precision, values[i]);
+			}
+		}
+		printf("\t%-*lu%s\n", width[7], numSamples(), resetColor());
 
 		std::size_t i{};
-		printSecondsRecurs(1, i, width[0], random_colors, bold, group_colors_level,
-		                   precision);
+		printSecondsRecurs(1, i, width, random_colors, bold, group_colors_level,
+		                   precision, left_pad, right_pad);
 	}
 
-	void printSecondsRecurs(int level, std::size_t& i, int component_width,
+	void printSecondsRecurs(int level, std::size_t& i, const std::array<int, 8>& width,
 	                        bool random_colors, bool bold, std::size_t group_colors_level,
-	                        int precision) const
+	                        int precision, const std::array<int, 8>& left_pad, const std::array<int, 8>& right_pad) const
 	{
 		static constexpr std::array<const char*, 7> const RC{redColor(),  greenColor(),   yellowColor(),
 		                                     blueColor(), magentaColor(), cyanColor(),
@@ -407,14 +416,34 @@ class Timing : public Timer
 		for (auto const& [n, t] : timer_) {
 			i += level <= group_colors_level;
 			std::string tag = std::string(2 * level, ' ') + std::to_string(n) + ". " + t.tag();
-			printf("%s%s%-*s\t%.*f\t%.*f\t%.*f\t%.*f\t%.*f\t%.*f\t%lu%s\n",
-			       bold ? "\033[1m" : "", random_colors ? RC[i % RC.size()] : t.color().c_str(),
-			       component_width, tag.c_str(), precision, t.totalSeconds(), precision,
-			       t.lastSeconds(), precision, t.meanSeconds(), precision, t.stdSeconds(),
-			       precision, t.minSeconds(), precision, t.maxSeconds(), t.numSamples(),
-			       resetColor());
-			t.printSecondsRecurs(level + 1, i, component_width, random_colors, bold,
-			                     group_colors_level, precision);
+			// printf("%s%s%-*s\t%-*.*f\t%-*.*f\t%-*.*f\t%-*.*f\t%-*.*f\t%-*.*f\t%-*lu%s\n",
+			// 	bold ? "\033[1m" : "", 
+			// 	random_colors ? RC[i % RC.size()] : t.color().c_str(),
+			// 	width[0], tag.c_str(), 
+			// 	width[1], precision, t.totalSeconds(), 
+			// 	width[2], precision, t.lastSeconds(), 
+			// 	width[3], precision, t.meanSeconds(), 
+			// 	width[4], precision, t.stdSeconds(), 
+			// 	width[5], precision, t.minSeconds(), 
+			// 	width[6], precision, t.maxSeconds(), 
+			// 	width[7], t.numSamples(),
+			// 	resetColor());
+
+			double values[] = {t.totalSeconds(), t.lastSeconds(), t.meanSeconds(), t.stdSeconds(),
+		                       t.minSeconds(),   t.maxSeconds()};
+
+			printf("%s%s%-*s", bold ? "\033[1m" : "", random_colors ? RC[i % RC.size()] : t.color().c_str(), width[0], tag.c_str());
+			for (std::size_t i=0; i<std::size(values); ++i){
+				if (std::isnan(totalSeconds())) {
+					printf("\t%*s%s%*s", left_pad[i+1], "", "nan", right_pad[i+1], "");
+				} else {
+					printf("\t%-*.*f", width[i+1], precision, values[i]);
+				}
+			}
+			printf("\t%-*lu%s\n", width[7], t.numSamples(), resetColor());
+
+			t.printSecondsRecurs(level + 1, i, width, random_colors, bold,
+			                     group_colors_level, precision, left_pad, right_pad);
 		}
 	}
 
