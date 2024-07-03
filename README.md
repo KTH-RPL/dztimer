@@ -1,6 +1,6 @@
 dztimer
 ---
-<!-- <a href="https://github.com/KTH-RPL/dztimer"><img src="https://img.shields.io/github/v/release/KTH-RPL/dztimer?label=version" /> <a href="https://github.com/KTH-RPL/dztimer/blob/master/LICENSE"><img src="https://img.shields.io/github/license/KTH-RPL/dztimer" />  -->
+<!-- <a href="https://github.com/KTH-RPL/dztimer"><img src="https://img.shields.io/github/v/release/KTH-RPL/dztimer?label=version" /> <a href="https://github.com/KTH-RPL/dztimer/blob/main/LICENSE"><img src="https://img.shields.io/github/license/KTH-RPL/dztimer" />  -->
 <a href="https://github.com/KTH-RPL/dztimer"><img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" /> <a href="https://github.com/KTH-RPL/dztimer"><img src="https://img.shields.io/badge/Windows-0078D6?st&logo=windows&logoColor=white" /> <a href="https://github.com/KTH-RPL/dztimer"><img src="https://img.shields.io/badge/mac%20os-000000?&logo=apple&logoColor=white" />
 <!-- <img src="https://img.shields.io/pypi/pyversions/dztimer.svg" /></a> -->
 
